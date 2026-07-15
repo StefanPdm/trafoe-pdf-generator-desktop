@@ -1,0 +1,5 @@
+node_modules/
+app/
+release/
+ms-playwright/
+*.log

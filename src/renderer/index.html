@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TRAFÖ Katalog Generator</title>
+<style>
+  :root { --trafo-red: #a6192e; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    overflow: hidden;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    color: #262626;
+    background: #fafafa;
+  }
+  header {
+    padding: 6mm 8mm 4mm;
+    border-bottom: 2px solid var(--trafo-red);
+    background: white;
+  }
+  header h1 { font-size: 16pt; margin: 0; color: var(--trafo-red); }
+  header p { font-size: 9pt; color: #666; margin: 1mm 0 0; }
+  main { padding: 6mm 8mm; }
+  fieldset {
+    border: 1px solid #ddd;
+    border-radius: 2mm;
+    padding: 3mm 4mm;
+    margin: 0 0 4mm;
+  }
+  .row-2col {
+    display: flex;
+    gap: 4mm;
+    align-items: stretch;
+    margin: 0 0 4mm;
+  }
+  .row-2col fieldset { flex: 1; margin: 0; }
+  legend { font-size: 9pt; font-weight: 700; color: var(--trafo-red); padding: 0 1mm; }
+  label { display: block; font-size: 10pt; margin: 1.5mm 0; cursor: pointer; }
+  label.checkbox { display: flex; align-items: center; gap: 2mm; }
+  .sub-field {
+    display: flex; align-items: center; gap: 2mm;
+    margin: 1.5mm 0 1.5mm 6mm;
+    font-size: 9.5pt; color: #555;
+  }
+  .sub-field input[type="number"] {
+    width: 16mm; padding: 1mm 1.5mm; font-size: 9.5pt;
+    border: 1px solid #ccc; border-radius: 1mm;
+  }
+  button#build {
+    display: block; width: 100%;
+    background: var(--trafo-red); color: white; font-weight: 700;
+    font-size: 11pt; padding: 3mm; border: none; border-radius: 1.5mm;
+    cursor: pointer;
+  }
+  button#build:disabled { background: #ccc; cursor: not-allowed; }
+  button.secondary {
+    display: block; width: 100%; margin-top: 3mm;
+    background: white; color: var(--trafo-red); font-weight: 700;
+    font-size: 10pt; padding: 2.5mm; border: 1px solid var(--trafo-red); border-radius: 1.5mm;
+    cursor: pointer;
+  }
+  #log {
+    margin-top: 4mm;
+    background: #1e1e1e; color: #d4d4d4;
+    font-family: Consolas, monospace; font-size: 8.5pt;
+    padding: 3mm; border-radius: 1.5mm;
+    height: 260px; overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  #result {
+    display: none;
+    margin-top: 3mm; padding: 3mm; border-radius: 1.5mm;
+    background: #e8f5e9; color: #2e7d32; font-size: 9.5pt;
+  }
+  footer {
+    text-align: center;
+    padding: 3mm 8mm 4mm;
+    font-size: 7.5pt;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>TRAFÖ Katalog Generator</h1>
+    <p>Erstellt den Gebrauchtstapler-PDF-Katalog von stapler.trafoe.de</p>
+  </header>
+  <main>
+    <div class="row-2col">
+      <fieldset>
+        <legend>Für wen ist dieser Katalog?</legend>
+        <label><input type="radio" name="priceList" value="haendler" checked> Händlerpreisliste</label>
+        <div class="sub-field" id="discountRow">
+          <label for="discount" style="margin:0;">Preisabschlag (%)</label>
+          <input type="number" id="discount" min="0" max="100" step="1" value="10">
+        </div>
+        <label><input type="radio" name="priceList" value="kunde"> Kundenpreisliste</label>
+      </fieldset>
+      <fieldset>
+        <legend>Marken</legend>
+        <label><input type="radio" name="brand" value="all" checked> Alle (Linde und Baoli)</label>
+        <label><input type="radio" name="brand" value="linde"> Nur Linde</label>
+        <label><input type="radio" name="brand" value="baoli"> Nur Baoli</label>
+      </fieldset>
+    </div>
+    <fieldset>
+      <legend>Daten</legend>
+      <label class="checkbox">
+        <input type="checkbox" id="useCache">
+        Zwischengespeicherte Daten verwenden (schneller, kein erneutes Scrapen)
+      </label>
+    </fieldset>
+    <button id="build">Katalog erstellen</button>
+    <div id="log"></div>
+    <div id="result"></div>
+    <button id="openFolder" class="secondary" style="display:none;">Ordner öffnen</button>
+  </main>
+  <footer>© 2026 Stefan Heinemann</footer>
+  <script src="renderer.js"></script>
+</body>
+</html>

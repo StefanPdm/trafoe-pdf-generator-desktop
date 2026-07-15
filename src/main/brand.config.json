@@ -1,0 +1,17 @@
+{
+  "companyName": "TRAFOE GmbH",
+  "logoPath": "../assets/logos/Trafoe_Logo_color.svg",
+  "partnerLogoPath": "../assets/logos/Linde-Trafoe_Logo.svg",
+  "phone": "+49 33234 79 200",
+  "email": "info@trafoe.de",
+  "address": "Wustermark",
+  "locations": ["Wustermark", "Neubrandenburg", "Berlin", "Potsdam", "Brandenburg"],
+  "website": "https://stapler.trafoe.de",
+  "primaryColor": "#a6192e",
+  "contactPerson": {
+    "name": "Matthias Blöß",
+    "phone": "+49 33234 79-200",
+    "mobile": "0177 3143713",
+    "email": "matthias.bloess@trafoe.de"
+  }
+}
