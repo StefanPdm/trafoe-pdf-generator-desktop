@@ -74,7 +74,7 @@ function applyDiscount(offers: Offer[], percent: number): Offer[] {
 function createWindow() {
   const win = new BrowserWindow({
     width: 720,
-    height: 720,
+    height: 830,
     useContentSize: true,
     resizable: false,
     autoHideMenuBar: true,
