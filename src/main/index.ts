@@ -1,18 +1,24 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import { scrapeOffers } from './scrape';
-import { buildCatalogPdf } from './pdf';
-import brand from './brand.config.json';
-import type { Offer } from './types';
 
-// Must be set before any chromium.launch() call (playwright resolves this
-// lazily at launch time, not at import time), so setting it here at module
-// load — before the window is even created — is early enough.
+// Must be set before requiring './scrape' or './pdf' — both pull in
+// 'playwright', which reads this env var when ITS module first loads, not
+// lazily inside launch() as a now-corrected comment here used to claim.
+// Setting it after those imports (even though still "before createWindow")
+// was too late: playwright had already cached the default global browsers
+// path (%LOCALAPPDATA%\ms-playwright) by then, so the packaged app silently
+// ignored its own bundled resources\ms-playwright and only worked by
+// accident on machines that already had a browser cached globally.
 const browsersPath = app.isPackaged
   ? path.join(process.resourcesPath, 'ms-playwright')
   : path.join(app.getAppPath(), 'ms-playwright');
 process.env.PLAYWRIGHT_BROWSERS_PATH = browsersPath;
+
+import { scrapeOffers } from './scrape';
+import { buildCatalogPdf } from './pdf';
+import brand from './brand.config.json';
+import type { Offer } from './types';
 
 const CACHE_PATH = path.join(app.getPath('userData'), 'offers-cache.json');
 const OUTPUT_DIR = path.join(app.getPath('documents'), 'TRAFOE Kataloge');
