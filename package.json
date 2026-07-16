@@ -8,7 +8,8 @@
     "build": "tsc && node scripts/copy-renderer.mjs",
     "start": "npm run build && electron .",
     "install-browsers": "node scripts/install-browsers.mjs",
-    "dist": "npm run build && electron-builder && node scripts/finalize-release.mjs"
+    "dist": "npm run build && electron-builder && node scripts/finalize-release.mjs",
+    "postinstall": "node scripts/install-git-hooks.mjs"
   },
   "dependencies": {
     "pdf-lib": "^1.17.1",
@@ -30,6 +31,7 @@
     "files": [
       "app/**/*",
       "assets/**/*",
+      "VERSION",
       "package.json"
     ],
     "extraResources": [

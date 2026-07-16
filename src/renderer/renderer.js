@@ -8,6 +8,8 @@ const priceListRadios = document.querySelectorAll('input[name="priceList"]');
 
 let lastOutPath = null;
 
+document.getElementById('version').textContent = `V ${window.api.version}`;
+
 function appendLog(msg) {
   logEl.textContent += `${msg}\n`;
   logEl.scrollTop = logEl.scrollHeight;
