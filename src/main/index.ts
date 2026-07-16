@@ -1,5 +1,6 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
 
 // Must be set before requiring './scrape' or './pdf' — both pull in
@@ -23,6 +24,8 @@ import type { Offer } from './types';
 const CACHE_PATH = path.join(app.getPath('userData'), 'offers-cache.json');
 const OUTPUT_DIR = path.join(app.getPath('documents'), 'TRAFOE Kataloge');
 const ICON_PATH = path.join(__dirname, '..', '..', 'assets', 'logos', 'Trafoe-Logo-small.png');
+const VERSION_PATH = path.join(__dirname, '..', '..', 'VERSION');
+const appVersion = readFileSync(VERSION_PATH, 'utf-8').trim();
 
 type PriceListKey = 'haendler' | 'kunde';
 type BrandFilterKey = 'all' | 'linde' | 'baoli';
@@ -151,3 +154,5 @@ ipcMain.handle('catalog:build', async (event, options: BuildOptions) => {
 ipcMain.handle('shell:showItemInFolder', (_event, filePath: string) => {
   shell.showItemInFolder(filePath);
 });
+
+ipcMain.handle('app:getVersion', () => appVersion);

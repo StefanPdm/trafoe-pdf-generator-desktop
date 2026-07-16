@@ -1,5 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { contextBridge, ipcRenderer } from 'electron';
 
 interface BuildOptions {
@@ -9,13 +7,16 @@ interface BuildOptions {
   useCache: boolean;
 }
 
-// Same __dirname traversal as index.ts's ICON_PATH: app/main -> project/asar
-// root, where the VERSION file sits alongside package.json.
-const VERSION_PATH = path.join(__dirname, '..', '..', 'VERSION');
-const appVersion = fs.readFileSync(VERSION_PATH, 'utf-8').trim();
-
+// No direct fs access here: Electron's default sandboxed preload context
+// doesn't reliably support raw Node module access the way the main process
+// does, so a synchronous fs.readFileSync at preload top-level can throw and
+// silently abort the whole exposeInMainWorld call — which would leave
+// window.api entirely undefined (explains why the build button also
+// appeared to do nothing, not just a missing version string). The main
+// process already reads files like this fine (see index.ts's ICON_PATH), so
+// the version is read there and handed over via IPC instead.
 contextBridge.exposeInMainWorld('api', {
-  version: appVersion,
+  getVersion: () => ipcRenderer.invoke('app:getVersion'),
   buildCatalog: (options: BuildOptions) => ipcRenderer.invoke('catalog:build', options),
   onProgress: (callback: (msg: string) => void) => {
     const listener = (_event: Electron.IpcRendererEvent, msg: string) => callback(msg);

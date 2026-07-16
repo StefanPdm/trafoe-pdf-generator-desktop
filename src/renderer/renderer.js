@@ -8,7 +8,9 @@ const priceListRadios = document.querySelectorAll('input[name="priceList"]');
 
 let lastOutPath = null;
 
-document.getElementById('version').textContent = `V ${window.api.version}`;
+window.api.getVersion().then((v) => {
+  document.getElementById('version').textContent = `V ${v}`;
+});
 
 function appendLog(msg) {
   logEl.textContent += `${msg}\n`;
