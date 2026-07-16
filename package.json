@@ -4,6 +4,10 @@
   "private": true,
   "description": "Windows-Desktop-App: erstellt per Knopfdruck den TRAFOE Gebrauchtstapler-PDF-Katalog von stapler.trafoe.de.",
   "main": "app/main/index.js",
+  "author": {
+    "name": "Stefan Heinemann",
+    "email": "stefan@heinemann.berlin"
+  },
   "scripts": {
     "build": "tsc && node scripts/copy-renderer.mjs",
     "start": "npm run build && electron .",
@@ -35,12 +39,20 @@
       "package.json"
     ],
     "extraResources": [
-      { "from": "ms-playwright", "to": "ms-playwright" }
+      {
+        "from": "ms-playwright",
+        "to": "ms-playwright"
+      }
     ],
     "win": {
-      "target": ["dir"],
+      "target": [
+        "dir"
+      ],
       "signAndEditExecutable": false,
-      "electronLanguages": ["de", "en-US"]
+      "electronLanguages": [
+        "de",
+        "en-US"
+      ]
     }
   }
 }
