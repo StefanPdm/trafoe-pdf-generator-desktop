@@ -60,10 +60,16 @@ Weitergabe an den Kollegen:
 - Ausgabe- und Cache-Pfade liegen bewusst außerhalb des Programmordners
   (`app.getPath('documents')` / `app.getPath('userData')`), da der entpackte
   Ordner z. B. unter "Programme" liegen und dort nicht beschreibbar sein kann.
-- `npm run install-browsers` entfernt nach dem Download automatisch
-  `chromium-headless-shell` und `ffmpeg` aus `ms-playwright/` — beide werden
-  vom Code nicht verwendet (kein `channel`-Flag, keine Videoaufzeichnung) und
-  würden nur unnötig Größe/Dateianzahl erhöhen.
+- `npm run install-browsers` entfernt nach dem Download automatisch `ffmpeg`
+  aus `ms-playwright/` — wird vom Code nicht verwendet (keine
+  Videoaufzeichnung) und würde nur unnötig Größe/Dateianzahl erhöhen.
+  `chromium-headless-shell` bleibt dagegen erhalten: Playwrights
+  `chromium.launch()` ohne Optionen (headless, genau das, was der Code
+  aufruft) lädt in aktuellen Playwright-Versionen diese Binary, nicht das
+  reguläre Chromium — wurde sie entfernt, schlägt das Scraping/PDF-Rendering
+  auf jedem Rechner ohne bereits gefüllten globalen Playwright-Cache fehl
+  (genau das ist einem Kollegen mit einer frisch entpackten Version
+  passiert).
 - Fenster-/Taskleisten-Icon kommt aus `assets/logos/Trafoe-Logo-small.png`
   (per `icon`-Option beim `BrowserWindow`). Das Icon der `.exe`-Datei selbst
   (wie sie im Explorer angezeigt wird) bleibt das Standard-Electron-Icon:

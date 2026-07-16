@@ -18,12 +18,15 @@ if (result.error) {
 }
 if (result.status !== 0) process.exit(result.status ?? 1);
 
-// `playwright install chromium` also pulls chromium-headless-shell and
-// ffmpeg, neither of which our code uses (no `channel` option, no video
-// recording) — pruning them keeps the bundled app smaller.
+// `playwright install chromium` also pulls ffmpeg, which our code doesn't
+// use (no video recording) — pruning it keeps the bundled app smaller.
+// chromium-headless-shell must stay: Playwright's default chromium.launch()
+// (headless, no options — what our code calls) resolves to that binary, not
+// full chromium; deleting it breaks scraping/PDF rendering on any machine
+// without a pre-populated global Playwright cache to silently fall back to.
 const entries = await fs.readdir(browsersPath);
 for (const entry of entries) {
-  if (entry.startsWith('chromium_headless_shell-') || entry.startsWith('ffmpeg-')) {
+  if (entry.startsWith('ffmpeg-')) {
     await fs.rm(path.join(browsersPath, entry), { recursive: true, force: true });
     console.log(`Removed unused ${entry}`);
   }
