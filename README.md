@@ -41,9 +41,16 @@ dem entpackten Ordner dauert dann nur noch 2–4 Sekunden.
 Weitergabe an den Kollegen:
 
 1. `TRAFOE-Katalog-Generator.zip` kopieren.
-2. Mit Rechtsklick → "Alle extrahieren..." an einen beliebigen Ort entpacken
-   (nicht direkt aus dem Zip heraus starten).
-3. Im entpackten Ordner `win-unpacked` die Datei
+2. Mit Rechtsklick → "Alle extrahieren..." entpacken — **an einen kurzen Pfad
+   nah am Laufwerks-Root** (z. B. `C:\TRAFOE\`), nicht tief verschachtelt
+   (z. B. nicht in `Dokumente\...\Downloads\...`). Electron bündelt intern
+   einige eingebaute Chromium-Erweiterungen mit sehr langen, tief
+   verschachtelten Ressourcen-Pfaden (z. B.
+   `reading_mode_gdocs_helper\_locales\en\...`) — kombiniert mit einem langen
+   Zielpfad überschreitet das Windows' 260-Zeichen-Pfadlimit, und der
+   Explorer-Entpacker bricht mit "Pfad zu lang" (Fehler 0x80010135) ab. Nicht
+   direkt aus dem Zip heraus starten.
+3. Im entpackten Ordner `TRAFOE Katalog Generator` die Datei
    `TRAFOE Katalog Generator.exe` starten — keine Installation, keine
    Adminrechte nötig.
 
