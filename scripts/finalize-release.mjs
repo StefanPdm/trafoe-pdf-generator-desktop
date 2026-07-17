@@ -33,4 +33,14 @@ fs.copyFileSync(
   path.join(releaseDir, 'Start-TRAFOE-Katalog-Generator.bat'),
 );
 
+// Shipped as its own small file rather than having the launcher pull the
+// icon out of the .exe: extracting an icon resource from a 245MB file that
+// may still be mid-read/AV-scan over a network drive was unreliable in
+// testing (shortcut created fine, icon silently stayed blank). A ~4KB .ico
+// reads instantly even under the same conditions.
+fs.copyFileSync(
+  path.join(root, 'assets', 'logos', 'Trafoe-Logo-small.ico'),
+  path.join(releaseDir, 'Trafoe-Logo-small.ico'),
+);
+
 console.log(`Release fertig: ${exePath}`);

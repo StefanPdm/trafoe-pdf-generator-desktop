@@ -59,13 +59,22 @@ Windows sie überhaupt ausführen darf) mitunter 30+ Sekunden **ohne jede
 Rückmeldung** — genug Zeit, dass jemand mehrfach doppelklickt.
 `Start-TRAFOE-Katalog-Generator.bat` (wenige hundert Byte, dadurch quasi
 ohne Scan-Verzögerung) zeigt sofort ein Konsolenfenster mit Hinweistext und
-startet die eigentliche `.exe` erst danach im Hintergrund.
+startet die eigentliche `.exe` erst danach im Hintergrund. Bei jedem Start
+legt bzw. aktualisiert das Skript zusätzlich eine Desktop-Verknüpfung mit
+korrektem lokalem Pfad an (eine `.lnk`-Datei speichert einen festen
+absoluten Pfad, kann also nicht vorab mit ausgeliefert werden). Das Icon
+dafür kommt bewusst aus der separaten, winzigen `Trafoe-Logo-small.ico` statt
+aus der eingebetteten Ressource der `.exe` selbst — Icon-Extraktion aus der
+245-MB-`.exe`, während die noch vom Netzlaufwerk gelesen/gescannt wird, hat
+sich als unzuverlässig erwiesen (Verknüpfung wurde angelegt, blieb aber ohne
+Icon).
 
 Weitergabe an den Kollegen bzw. Ablage auf dem Netzlaufwerk:
 
-1. Beide Dateien kopieren: `TRAFOE-Katalog-Generator.exe` **und**
-   `Start-TRAFOE-Katalog-Generator.bat` (müssen im selben Ordner liegen —
-   das Batch-Skript findet die `.exe` relativ zu seinem eigenen Pfad).
+1. Alle drei Dateien kopieren: `TRAFOE-Katalog-Generator.exe`,
+   `Start-TRAFOE-Katalog-Generator.bat` **und** `Trafoe-Logo-small.ico`
+   (müssen im selben Ordner liegen — das Batch-Skript findet beide anderen
+   Dateien relativ zu seinem eigenen Pfad).
 2. `Start-TRAFOE-Katalog-Generator.bat` starten (nicht direkt die `.exe`) —
    keine Installation, keine Adminrechte nötig.
 
