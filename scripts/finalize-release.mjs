@@ -1,75 +1,36 @@
-import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const releaseDir = path.join(root, 'release');
+const exePath = path.join(releaseDir, 'TRAFOE-Katalog-Generator.exe');
+
+// The "portable" NSIS target already produces a single, correctly-named
+// (via portable.artifactName), correctly-iconed (via win.icon, embedded by
+// NSIS's own compiler — not rcedit, which corrupts NSIS's appended payload
+// if run on it afterward) .exe directly in release/. There's nothing left
+// to rename, icon-patch, or zip — unlike the old "dir" target, which needed
+// all three.
+if (!fs.existsSync(exePath)) {
+  throw new Error(`Expected electron-builder output at ${exePath}, but it was not found.`);
+}
+
+// electron-builder still writes its intermediate unpacked app here on the
+// way to building the portable exe (see appOutDir in the build log) — not
+// needed afterward, just clutter.
 const unpackedDir = path.join(releaseDir, 'win-unpacked');
+fs.rmSync(unpackedDir, { recursive: true, force: true });
 
-// electron-builder's "dir" target always names its output folder
-// "win-unpacked" — not configurable. That name leaks into the zip a
-// colleague extracts, so it's renamed here to the product name before
-// zipping.
-const productName = 'TRAFOE Katalog Generator';
-const finalDir = path.join(releaseDir, productName);
-const zipPath = path.join(releaseDir, 'TRAFOE-Katalog-Generator.zip');
+// The portable exe itself only shows visible feedback (the NSIS splash)
+// once enough of it has been read off the network drive and cleared by AV
+// scanning to start executing — which can take 30+ seconds on its own,
+// before any of the exe's own code (including the splash) can run. This
+// launcher gives instant feedback (it's a few hundred bytes, no scan delay)
+// and starts the real exe in the background.
+fs.copyFileSync(
+  path.join(root, 'assets', 'Start-TRAFOE-Katalog-Generator.bat'),
+  path.join(releaseDir, 'Start-TRAFOE-Katalog-Generator.bat'),
+);
 
-if (!fs.existsSync(unpackedDir)) {
-  throw new Error(`Expected electron-builder output at ${unpackedDir}, but it was not found.`);
-}
-
-function sleep(ms) {
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
-}
-
-// Windows Defender's real-time scan briefly locks freshly written/renamed
-// executables, so filesystem and shell operations on them can transiently
-// fail right after electron-builder or rcedit touch the file. Retry instead
-// of failing the whole release build over a race with the AV scanner.
-function retry(fn, attempts = 6, delayMs = 1500) {
-  for (let i = 1; i <= attempts; i++) {
-    try {
-      return fn();
-    } catch (err) {
-      if (i === attempts) throw err;
-      sleep(delayMs);
-    }
-  }
-}
-
-fs.rmSync(finalDir, { recursive: true, force: true });
-retry(() => {
-  try {
-    fs.renameSync(unpackedDir, finalDir);
-  } catch (err) {
-    if (err.code !== 'EPERM' && err.code !== 'EBUSY') throw err;
-    fs.cpSync(unpackedDir, finalDir, { recursive: true });
-    fs.rmSync(unpackedDir, { recursive: true, force: true });
-  }
-});
-
-// electron-builder's own icon embedding (signAndEditExecutable) always
-// downloads the winCodeSign archive first, even with no signing cert
-// configured — and extracting it fails here with "Cannot create symbolic
-// link" (needs Developer Mode or an elevated shell). rcedit itself doesn't
-// need that archive, so a vendored copy is invoked directly instead.
-const rceditPath = path.join(root, 'scripts', 'vendor', 'rcedit-x64.exe');
-const iconPath = path.join(root, 'assets', 'logos', 'Trafoe-Logo-small.ico');
-const exePath = path.join(finalDir, `${productName}.exe`);
-retry(() => execSync(`"${rceditPath}" "${exePath}" --set-icon "${iconPath}"`, { stdio: 'inherit' }));
-
-// Compress-Archive (not a cross-platform zip lib) is fine here since this
-// whole app is Windows-only (electron-builder win target). $ErrorActionPreference
-// = 'Stop' turns a locked-file warning into a real process failure instead of
-// a silently-swallowed non-terminating error that leaves no zip behind.
-retry(() => {
-  fs.rmSync(zipPath, { force: true });
-  execSync(
-    `powershell -NoProfile -Command "$ErrorActionPreference='Stop'; Compress-Archive -Path '${finalDir}' -DestinationPath '${zipPath}' -CompressionLevel Optimal"`,
-    { stdio: 'inherit' },
-  );
-  if (!fs.existsSync(zipPath)) throw new Error('zip was not created');
-});
-
-console.log(`Release gepackt: ${zipPath}`);
+console.log(`Release fertig: ${exePath}`);

@@ -46,13 +46,19 @@
     ],
     "win": {
       "target": [
-        "dir"
+        "portable"
       ],
+      "icon": "assets/logos/Trafoe-Logo-small.ico",
       "signAndEditExecutable": false,
       "electronLanguages": [
         "de",
         "en-US"
       ]
+    },
+    "portable": {
+      "requestExecutionLevel": "user",
+      "artifactName": "TRAFOE-Katalog-Generator.exe",
+      "splashImage": "assets/splash.bmp"
     }
   }
 }
