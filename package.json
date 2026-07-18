@@ -2,7 +2,7 @@
   "name": "trafoe-katalog-desktop",
   "version": "0.1.0",
   "private": true,
-  "description": "Windows-Desktop-App: erstellt per Knopfdruck den TRAFOE Gebrauchtstapler-PDF-Katalog von stapler.trafoe.de.",
+  "description": "Windows-Desktop-App: erstellt per Knopfdruck den TRAFÖ Gebrauchtstapler-PDF-Katalog von stapler.trafoe.de.",
   "main": "app/main/index.js",
   "author": {
     "name": "Stefan Heinemann",
@@ -27,7 +27,7 @@
   },
   "build": {
     "appId": "de.trafoe.katalogdesktop",
-    "productName": "TRAFOE Katalog Generator",
+    "productName": "TRAFÖ Katalog Generator",
     "asar": true,
     "directories": {
       "output": "release"

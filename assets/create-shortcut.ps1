@@ -1,4 +1,4 @@
-# $AppDir deliberately isn't passed in as a -File script argument: a
+﻿# $AppDir deliberately isn't passed in as a -File script argument: a
 # trailing backslash immediately before the closing quote in a quoted
 # command-line argument is a well-known Windows argument-parsing trap, and
 # passing the batch's %APP_DIR% (which %~dp0 always ends with \) that way
@@ -11,8 +11,14 @@ $AppDir = $PSScriptRoot
 
 $ErrorActionPreference = 'SilentlyContinue'
 
-$shortcutPath = Join-Path $env:USERPROFILE 'Desktop\TRAFOE Katalog Generator.lnk'
-$iconDir = Join-Path $env:LOCALAPPDATA 'TRAFOE Katalog Generator'
+# "TRAFÖ" here (the Desktop-visible shortcut name and its local icon-cache
+# folder) but plain-ASCII "Trafoe"/"TRAFOE" for the actual on-disk file
+# names below and in Start-TRAFOE-Katalog-Generator.bat: this .ps1 is read
+# directly by PowerShell (handles Unicode fine), but that .bat is parsed by
+# cmd.exe, which desyncs on non-ASCII text even under chcp 65001 (reproduced
+# and fixed once already - not worth reintroducing for cosmetics).
+$shortcutPath = Join-Path $env:USERPROFILE 'Desktop\TRAFÖ Katalog Generator.lnk'
+$iconDir = Join-Path $env:LOCALAPPDATA 'TRAFÖ Katalog Generator'
 $localIcon = Join-Path $iconDir 'Trafoe-Logo-small.ico'
 $sourceIcon = Join-Path $AppDir 'Trafoe-Logo-small.ico'
 

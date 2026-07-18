@@ -22,7 +22,7 @@ import brand from './brand.config.json';
 import type { Offer } from './types';
 
 const CACHE_PATH = path.join(app.getPath('userData'), 'offers-cache.json');
-const OUTPUT_DIR = path.join(app.getPath('documents'), 'TRAFOE Kataloge');
+const OUTPUT_DIR = path.join(app.getPath('documents'), 'TRAFÖ Kataloge');
 const ICON_PATH = path.join(__dirname, '..', '..', 'assets', 'logos', 'Trafoe-Logo-small.png');
 const VERSION_PATH = path.join(__dirname, '..', '..', 'VERSION');
 const appVersion = readFileSync(VERSION_PATH, 'utf-8').trim();

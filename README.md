@@ -16,7 +16,7 @@ npm start                  # baut TypeScript und startet die App
 In der App: Preisliste wählen (Händler/Kunde), optional "Zwischengespeicherte
 Daten verwenden" für schnelle Testläufe ohne erneutes Scrapen, dann auf
 "Katalog erstellen" klicken. Das PDF landet unter
-`Dokumente\TRAFOE Kataloge\trafoe-katalog-<Datum>.pdf`.
+`Dokumente\TRAFÖ Kataloge\trafoe-katalog-<Datum>.pdf`.
 
 ## Build für Kollegen ohne Node.js
 
@@ -60,14 +60,26 @@ Rückmeldung** — genug Zeit, dass jemand mehrfach doppelklickt.
 `Start-TRAFOE-Katalog-Generator.bat` (wenige hundert Byte, dadurch quasi
 ohne Scan-Verzögerung) zeigt sofort ein Konsolenfenster mit Hinweistext und
 startet die eigentliche `.exe` erst danach im Hintergrund. Bei jedem Start
-legt bzw. aktualisiert das Skript zusätzlich eine Desktop-Verknüpfung mit
-korrektem lokalem Pfad an (eine `.lnk`-Datei speichert einen festen
-absoluten Pfad, kann also nicht vorab mit ausgeliefert werden). Das Icon
-dafür kommt bewusst aus der separaten, winzigen `Trafoe-Logo-small.ico` statt
-aus der eingebetteten Ressource der `.exe` selbst — Icon-Extraktion aus der
-245-MB-`.exe`, während die noch vom Netzlaufwerk gelesen/gescannt wird, hat
-sich als unzuverlässig erwiesen (Verknüpfung wurde angelegt, blieb aber ohne
-Icon).
+legt bzw. aktualisiert das Skript zusätzlich eine Desktop-Verknüpfung
+("TRAFÖ Katalog Generator.lnk") mit korrektem lokalem Pfad an (eine
+`.lnk`-Datei speichert einen festen absoluten Pfad, kann also nicht vorab
+mit ausgeliefert werden). Das Icon dafür kommt bewusst aus der separaten,
+winzigen `Trafoe-Logo-small.ico` statt aus der eingebetteten Ressource der
+`.exe` selbst — Icon-Extraktion aus der 245-MB-`.exe`, während die noch vom
+Netzlaufwerk gelesen/gescannt wird, hat sich als unzuverlässig erwiesen
+(Verknüpfung wurde angelegt, blieb aber ohne Icon).
+
+**Hinweis zu Umlauten:** Der Desktop-Verknüpfung-Name und alle Texte, die
+`create-shortcut.ps1` erzeugt, dürfen "TRAFÖ" mit Umlaut schreiben — dieses
+Skript wird direkt von PowerShell gelesen, das kommt mit Unicode klar. Die
+eigentlichen Dateinamen (`TRAFOE-Katalog-Generator.exe`,
+`Start-TRAFOE-Katalog-Generator.bat`, `Trafoe-Logo-small.ico`) sowie jeglicher
+Text *innerhalb* der `.bat`-Datei bleiben bewusst bei "TRAFOE" ohne Umlaut:
+`cmd.exe`s eigener Parser gerät bei Sonderzeichen (reproduziert u. a. mit
+einem einzelnen Gedankenstrich in einem Kommentar) durcheinander und
+missinterpretiert danach ganze Folgezeilen als kaputte Befehle — selbst unter
+`chcp 65001`. Das einmal gefundene und gefixte Problem soll hier nicht aus
+kosmetischen Gründen wieder auftauchen.
 
 Weitergabe an den Kollegen bzw. Ablage auf dem Netzlaufwerk:
 

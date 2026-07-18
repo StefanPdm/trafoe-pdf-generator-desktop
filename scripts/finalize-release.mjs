@@ -33,6 +33,14 @@ fs.copyFileSync(
   path.join(releaseDir, 'Start-TRAFOE-Katalog-Generator.bat'),
 );
 
+// Shortcut creation logic lives here rather than inline in the .bat: an
+// equivalent single-line -Command string was too fragile to maintain
+// reliably under cmd.exe's quoting rules.
+fs.copyFileSync(
+  path.join(root, 'assets', 'create-shortcut.ps1'),
+  path.join(releaseDir, 'create-shortcut.ps1'),
+);
+
 // Shipped as its own small file rather than having the launcher pull the
 // icon out of the .exe: extracting an icon resource from a 245MB file that
 // may still be mid-read/AV-scan over a network drive was unreliable in
