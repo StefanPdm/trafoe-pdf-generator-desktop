@@ -21,8 +21,19 @@ rem Kept plain ASCII throughout this file on purpose: umlauts and even
 rem punctuation like em-dashes caused cmd.exe's parser to desync mid-script
 rem and misread later lines as garbled commands, even under chcp 65001 -
 rem not worth the fragility for a launcher script.
+rem
+rem The .ico is copied to a LOCAL folder first and the shortcut points at
+rem that copy, not at the one still sitting in %APP_DIR% on the network
+rem drive: Explorer deliberately avoids resolving shortcut icons that live
+rem on a network path (to stay responsive on slow links) and falls back to
+rem a blank/generic icon rather than actually reading it - true even for a
+rem small, fast-to-read file, and even though the shortcut itself is local.
+set "ICON_DIR=%LOCALAPPDATA%\TRAFOE Katalog Generator"
+if not exist "%ICON_DIR%" mkdir "%ICON_DIR%" >nul 2>&1
+copy /y "%APP_DIR%Trafoe-Logo-small.ico" "%ICON_DIR%\Trafoe-Logo-small.ico" >nul 2>&1
+
 if exist "%SHORTCUT%" del /f /q "%SHORTCUT%"
-powershell -NoProfile -Command "$s = (New-Object -ComObject WScript.Shell).CreateShortcut('%SHORTCUT%'); $s.TargetPath = '%APP_DIR%Start-TRAFOE-Katalog-Generator.bat'; $s.WorkingDirectory = '%APP_DIR%'; $s.IconLocation = '%APP_DIR%Trafoe-Logo-small.ico'; $s.Save()" >nul 2>&1
+powershell -NoProfile -Command "$s = (New-Object -ComObject WScript.Shell).CreateShortcut('%SHORTCUT%'); $s.TargetPath = '%APP_DIR%Start-TRAFOE-Katalog-Generator.bat'; $s.WorkingDirectory = '%APP_DIR%'; $s.IconLocation = '%ICON_DIR%\Trafoe-Logo-small.ico'; $s.Save()" >nul 2>&1
 ie4uinit.exe -ClearIconCache >nul 2>&1
 
 echo.
